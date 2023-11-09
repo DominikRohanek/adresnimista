@@ -76,7 +76,7 @@ WSGI_APPLICATION = "adresnimista.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.mysql",
-        "NAME": "adresnimsista",
+        "NAME": "adresnimista",
         "USER": "root",
         "PASSWORD": "root",
         "HOST": "db",
