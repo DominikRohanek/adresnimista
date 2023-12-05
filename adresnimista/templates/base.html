@@ -7,6 +7,16 @@
         <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
     </head>
     <body>
+        <nav>
+            <ul>
+                <li><a href="{% url "index" %}">Titulní Strana</a><li>
+                {% if user.is_authenticated %}
+                <li><a href="{% url "password_change" %}">Změna Hesla</a><li>
+                <li><a href="{% url "logout" %}">Odhlášení</a><li>
+                {% else %}
+                <li><a href="{% url "login" %}">Přihlášení</a><li>
+                {% endif %} 
+            </ul>
         <main>
             {% block content %}{% endblock %}
         </main>
