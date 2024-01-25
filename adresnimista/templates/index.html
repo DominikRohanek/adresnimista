@@ -2,6 +2,14 @@
 
 {% block content %}
     <h1>{% block title %}Adresní Místa{% endblock %}</h1>
-    <p>Projekt 4.A.</p>
-    <p>Dominik a Anet.</p>
+    {% if user.is_authenticated %}
+    <ul>
+        {% for place in places %}
+           <li>{{place}}</li>
+         {% endfor %}
+        </ul>
+    {% else %}
+        <p>Projekt 4.A.</p>
+        <p>Dominik a Anet.</p>
+    {% endif %}
 {% endblock %}
