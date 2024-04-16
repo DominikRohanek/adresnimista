@@ -1,15 +1,29 @@
 {% extends "base.html" %}
+{% load static%}
 
 {% block content %}
-    <h1>{% block title %}Adresní Místa{% endblock %}</h1>
+<div class="home">
+    <h1>{% block title %}ADRESNÍ MÍSTA{% endblock %}</h1>
+    <div class="obrazek">
+        <img src="{% static 'images/stranka.jpg' %}">
+    </div>
     {% if user.is_authenticated %}
-    <ul>
-        {% for place in places %}
-           <li>{{place}}</li>
-         {% endfor %}
-        </ul>
-    {% else %}
-        <p>Projekt 4.A.</p>
-        <p>Dominik a Anet.</p>
-    {% endif %}
+    <div class="text">
+        <form action=".">
+            <input type="text" name="search" value="{{request.GET.search}}">
+            <input type="submit" value="Hledat">
+        </form>
+        <ul>
+            {% for city in page_obj %}
+            <li><a href="{% url "address" city.id %}">{{city}}</a></li>
+            {% endfor %}
+            </ul>
+            {% include "paginator.html" %}
+        {% else %}
+            <p>Projekt 4.A.</p>
+            <p>Dominik a Anet.</p>
+        {% endif %}
+    </div>
+</div>
 {% endblock %}
+

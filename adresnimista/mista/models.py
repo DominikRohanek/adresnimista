@@ -1,12 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-class Place(models.Model):
-    identifier = models.CharField(max_length=30)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
-    
-    def __str__(self):
-        return self.identifier
 
 class City(models.Model):
     name = models.CharField(max_length=40)
@@ -14,6 +8,13 @@ class City(models.Model):
 
     def __str__(self):
         return f"{self.name} ({self.postalcode})" 
+        
+    class Meta:
+        unique_together=["name","postalcode"]
+
+
+
+
 
 class Address(models.Model):
 
@@ -21,10 +22,13 @@ class Address(models.Model):
     street = models.CharField(max_length=50)
     orientation_number = models.CharField(max_length=10)
     descriptive_number = models.CharField(max_length=10)
-    registration_number = models.CharField(max_length=10)
 
     def __str__(self):
-        return f"{self.street} ({self.orientation_number})" 
+        if self.street:
+            if self.orientation_number:
+                return f"{self.street} {self.descriptive_number}/{self.orientation_number}"
+            return f"{self.street} {self.descriptive_number}" 
+        return f"{self.city.name} {self.descriptive_number}"
 
-
-        
+    class Meta:
+        ordering=["street","orientation_number","descriptive_number"]

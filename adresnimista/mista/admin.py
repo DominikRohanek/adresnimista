@@ -1,8 +1,11 @@
 from django.contrib import admin
 
-from .models import Place
+from .models import City, Address
 
-@admin.register(Place)
-class PlaceAdmin(admin.ModelAdmin):
+@admin.register(City)
+class CityAdmin(admin.ModelAdmin):
     pass
 
+@admin.register(Address)
+class AddressAdmin(admin.ModelAdmin):
+    pass

@@ -1,15 +1,36 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.db.models import Q
+from django.core.paginator import Paginator
 
-from .forms import PlaceForm
-from .models import Place
+from .models import City, Address
 
 def index(request):
-    places=Place.objects.filter(user_id=request.user.id)
-    return render(request,"index.html",{"places":places})
+    cities = City.objects.all()
+
+    if request.GET.get("search"):
+        cities=cities.filter(name__icontains=request.GET.get("search"))
+
+    paginator = Paginator(cities, 25)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+    return render(request,"index.html",{"page_obj":page_obj})
     
+def address(request, city_id):
+    city = get_object_or_404(City, id=city_id)
+    addresses=city.address_set.all()
+    
+    if request.GET.get("search"):
+        addresses=addresses.filter(Q(street__icontains=request.GET.get("search")) | Q(descriptive_number=request.GET.get("search")) | Q(orientation_number=request.GET.get("search")))
+
+    paginator = Paginator(addresses, 25)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+    return render(request,"address.html",{"page_obj":page_obj, "city":city}) 
+
+
 def registration(request):
     if request.method == "POST":
         form = UserCreationForm(request.POST)
@@ -20,22 +41,4 @@ def registration(request):
     else:
         form = UserCreationForm()
     return render(request, "registration/registration.html", {"form": form})
-
-@login_required   
-def add_item(request):
-    if request.method == "POST":
-        form = PlaceForm(request.POST)
-
-        if form.is_valid():
-            instance = form.save(commit=False)
-            instance.user = request.user
-            instance.save()
-            messages.add_message(request, messages.INFO, "Místo bylo přidáno")
-            form.save()
-            return redirect("index")
-
-    else:
-
-        form = PlaceForm()
-    return render(request, "add_item.html",{"form": form})
 

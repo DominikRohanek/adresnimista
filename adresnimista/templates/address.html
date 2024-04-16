@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>{% block title %}{{ city }}{% endblock %}</h1>
+    <form action=".">
+        <input type="text" name="search" value="{{request.GET.search}}">
+        <input type="submit" value="Hledat">
+    </form>
+    <ul>
+    {% for address in page_obj %}
+        <li>{{address}}</li>
+    {% endfor %}
+    </ul>
+    {% include "paginator.html" %}
+{% endblock %}
